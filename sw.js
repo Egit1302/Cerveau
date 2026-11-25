@@ -1,4 +1,29 @@
-var V='cerveau-v4',F=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',function(e){e.waitUntil(caches.open(V).then(function(c){return c.addAll(F)}).then(function(){return self.skipWaiting()}))});
-self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==V}).map(function(x){return caches.delete(x)}))}).then(function(){return self.clients.claim()}))});
-self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(function(r){var c=r.clone();caches.open(V).then(function(ch){ch.put(e.request,c)}).catch(function(){});return r}).catch(function(){return caches.match(e.request).then(function(m){return m||caches.match('./index.html')})}))});
+/* Service worker de Cerveau : affiche les notifications et rouvre la bonne note au toucher. */
+self.addEventListener('install', function () { self.skipWaiting(); });
+self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
+
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  var url = (e.notification.data && e.notification.data.url) || './';
+  e.waitUntil((async function () {
+    var list = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      if ('focus' in c) {
+        try { await c.focus(); } catch (x) {}
+        try { if (c.navigate) await c.navigate(url); } catch (x) {}
+        return;
+      }
+    }
+    if (self.clients.openWindow) await self.clients.openWindow(url);
+  })());
+});
+
+/* Prêt pour de vrais messages push (payload JSON : title, body, url). */
+self.addEventListener('push', function (e) {
+  var d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : '' }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Cerveau', {
+    body: d.body || '', icon: 'icon-192.png', badge: 'icon-192.png', data: { url: d.url || './' }
+  }));
+});
