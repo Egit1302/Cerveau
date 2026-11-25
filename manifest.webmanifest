@@ -1,1 +1,16 @@
-{"name":"Cerveau","short_name":"Cerveau","description":"Ton cerveau en réseau de neurones","start_url":"./index.html","scope":"./","display":"standalone","orientation":"portrait","background_color":"#eef0f7","theme_color":"#5a54d8","lang":"fr","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
+{
+  "name": "Cerveau",
+  "short_name": "Cerveau",
+  "description": "Ta mémoire personnelle en réseau de neurones",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef0f7",
+  "theme_color": "#5a54d8",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
